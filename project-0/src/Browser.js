@@ -1,8 +1,10 @@
-function Browser() {
+import Items from "./Items"
+function Browser(props) {
     return (
-        <>
-        <p>Browser</p>
-        </>
+        <div>
+            <p className="title">Market Items</p>
+            <Items root = {props.root} ></Items>
+        </div>
     )
 }
 

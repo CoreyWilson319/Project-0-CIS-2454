@@ -54,30 +54,3 @@ img {
   text-align: center;
   font-size: 5vh;
 }
-
-.checkout-items {
-  text-align: center;
-  display: flex;
-  justify-content: space-evenly;
-  /* justify-items: space-between; */
-}
-
-.checkout-form {
-  text-align: center;
-  display: grid;
-  grid-template-columns: 2fr;
-  width: 75vh;
-  gap: 2vh;
-  align-self: center;
-  margin: 5vh;
-}
-
-#checkout-button {
-  width: 15vh;
-  justify-self: center;
-}
-
-input {
-  padding: 1vh;
-  border: 1px solid black;
-}

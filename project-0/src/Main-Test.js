@@ -1,20 +1,18 @@
 import './App.css';
-import {Route, Routes} from "react-router-dom"
+import {Route, Routes, Link} from "react-router-dom"
 import Browser from "./Browser"
 import Navbar from "./Navbar"
 import Landing from "./Landing"
-import Checkout from "./Checkout"
 
-function Main(props) {
+function Main() {
   return (
     <>
     <div className="App">
       <Navbar />
 
       <Routes>
-        <Route element={<Browser root = {props.root}/>} path="browse"/>
+        <Route element={<Browser />} path="/browse"/>
         <Route element={<Landing />} path="/" />
-        <Route element={<Checkout />} path="checkout" />
       </Routes>
     </div>
     </>
