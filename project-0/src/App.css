@@ -69,6 +69,7 @@ img {
   width: 75vh;
   gap: 2vh;
   align-self: center;
+  justify-self: center;
   margin: 5vh;
 }
 

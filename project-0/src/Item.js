@@ -10,7 +10,7 @@ function Item(props) {
         <div className="item">
                 <p>{props.name.toUpperCase()}</p><p>{props.cost}</p>
             <div className="item-button">
-                    <button onClick={() => handleClick}>Buy</button>
+                    <button onClick={() => handleClick()}>Buy</button>
             </div>
         </div>
     )
