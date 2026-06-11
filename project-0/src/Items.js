@@ -1,4 +1,4 @@
-import Item from "./Item"
+import ProductCard from "./ProductCard"
 
 function Items(props) {
     // const root = {...prop}
@@ -14,7 +14,7 @@ function Items(props) {
     return (
         <div className = "item-container">
         {availableItems.map((item) => {
-            return(<Item key={item.id} name={item.name} cost={item.cost} root = {props.root}/>)
+            return(<ProductCard key={item.id} name={item.name} cost={item.cost} root = {props.root}/>)
         })}
         </div>
     )

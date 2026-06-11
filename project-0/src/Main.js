@@ -14,7 +14,6 @@ function Main(props) {
       <Routes>
         <Route element={<Browser root = {props.root}/>} path="browse"/>
         <Route element={<Landing />} path="/" />
-        <Route element={<Checkout />} path="checkout" />
       </Routes>
     </div>
     </>

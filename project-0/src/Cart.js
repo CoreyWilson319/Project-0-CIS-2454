@@ -1,7 +1,7 @@
 function Cart(props) {
     return (
         <div>
-            <p>Cart ( {} )</p>
+            <p className="navbar-text">Cart ( {} )</p>
         </div>
     )
 }
