@@ -56,9 +56,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
             foreach ($tax_brackets as $bracket) {
                 $cutoff = $bracket[0];
                 $percentage = number_format($bracket[1] * 100). '%';
-                $amount = $taxable_income * $bracket[1];
+                $amount = "$".number_format($taxable_income * $bracket[1], 2, '.', ',');
                 if ($taxable_income > $cutoff) {
-                    echo "Taxes Owed at {$percentage} bracket:<br> {$amount}";
+                    echo "Taxes Owed at {$percentage} bracket: {$amount}<br>";
+                } else if ($taxable_income < $cutoff) {
+                    echo "Taxes Owed at {$percentage} bracket: 0.00 <br>";
                 }
             }
         }
