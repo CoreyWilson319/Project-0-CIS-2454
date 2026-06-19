@@ -9,7 +9,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         <title></title>
     </head>
     <body>
-        <h1>Federal Income Tax Helper</h1>
+        <h1 id="header">Federal Income Tax Helper</h1>
         <form method="post">
             <label>Name:</label><input class="form_input" value="" name="name" id="name"/>
             <label>Gross Income:</label><input class="form_input" value="" name="income" id="income"/>
@@ -51,18 +51,34 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         }
         
         function calculateTaxes($taxable_income) {
-            $tax_brackets = [[12400, .10], [50400, .12], [105700, .22], 
-                [201775, .24], [256225, .32], [640600, .35], [640601, .37]];
+            $output_agi = $taxable_income;
+            
+            $tax_brackets = [
+                [0, 12400, .10], 
+                [12400, 50400, .12], 
+                [50400, 105700, .22], 
+                [105700, 201775, .24], 
+                [201775, 256225, .32], 
+                [256225, 640600, .35], 
+                [640600, 999999999, .37]];
             foreach ($tax_brackets as $bracket) {
-                $cutoff = $bracket[0];
-                $percentage = number_format($bracket[1] * 100). '%';
-                $amount = "$".number_format($taxable_income * $bracket[1], 2, '.', ',');
-                if ($taxable_income > $cutoff) {
-                    echo "Taxes Owed at {$percentage} bracket: {$amount}<br>";
-                } else if ($taxable_income < $cutoff) {
-                    echo "Taxes Owed at {$percentage} bracket: 0.00 <br>";
+                $min = $bracket[0];
+                $max = $bracket[1];
+                $percentage = number_format($bracket[2] * 100). '%';
+
+                if ($min < $taxable_income) {
+                    $output = "$".number_format($max * $bracket[2], 2, '.', ',');
+//                    $output = "$".number_format(($taxable_income) * $bracket[2], 2, '.', ',');
+                    echo "<h2>Taxes Owed at {$percentage} bracket: {$output}<br></h2>";
+                    $taxable_income = $taxable_income - $max;
+                } 
+                else {
+                    echo "<h2>Taxes Owed at {$percentage} bracket: $0.00 <br></h2>";
                 }
+                
             }
+            
+            echo "<h2>Adjusted Gross Income: {$output_agi} <br></h2>";
         }
         
        
