@@ -51,8 +51,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         }
         
         function calculateTaxes($taxable_income) {
-            $output_agi = $taxable_income;
-            
+            $initial_taxable_income = $taxable_income;
+            $output_agi = "$".number_format($taxable_income, 2, '.', ',');
             $tax_brackets = [
                 [0, 12400, .10], 
                 [12400, 50400, .12], 
@@ -61,24 +61,43 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 [201775, 256225, .32], 
                 [256225, 640600, .35], 
                 [640600, 999999999, .37]];
-            foreach ($tax_brackets as $bracket) {
-                $min = $bracket[0];
-                $max = $bracket[1];
-                $percentage = number_format($bracket[2] * 100). '%';
+            $user_bracket_index = null;
+            $taxable_amounts = [];
+            foreach ($tax_brackets as $index => $bracket) {
+                [$min, $max, $rate] = $bracket;
+                $percentage = number_format($rate * 100). '%';
+                $taxable_amount = ($max - $min) * $bracket[2];
 
-                if ($min < $taxable_income) {
-                    $output = "$".number_format($max * $bracket[2], 2, '.', ',');
-//                    $output = "$".number_format(($taxable_income) * $bracket[2], 2, '.', ',');
+                if ($taxable_income > $max) {
+                    $output = "$".number_format(($taxable_amount), 2, '.', ',');
                     echo "<h2>Taxes Owed at {$percentage} bracket: {$output}<br></h2>";
-                    $taxable_income = $taxable_income - $max;
-                } 
-                else {
-                    echo "<h2>Taxes Owed at {$percentage} bracket: $0.00 <br></h2>";
-                }
-                
+                    $income_in_bracket = $max - $min;
+                    $taxable_amount = $income_in_bracket * $rate;
+                    $taxable_amounts[] = $taxable_amount;
+                } else {
+                    $user_bracket_index = $index;
+                    $final_output = ($taxable_income - $min) * $rate;
+                    $final_output = "$".number_format(($final_output), 2, '.', ',');
+                    echo "<h2>Taxes Owed at {$percentage} bracket: {$final_output}<br></h2>";
+                    $taxable_amounts[] = $final_output;
+                    break;
+                }               
+            }
+            
+            for ($i = $user_bracket_index + 1; $i < count($tax_brackets); $i++) {
+                $min = $tax_brackets[$i][0];
+                $max = $tax_brackets[$i][1];
+                $percentage = number_format($tax_brackets[$i][2] * 100). '%';
+                echo "<h2>Taxes Owed at {$percentage} bracket: $0.00<br></h2>";
             }
             
             echo "<h2>Adjusted Gross Income: {$output_agi} <br></h2>";
+            $total_tax = "$".number_format(array_sum($taxable_amounts), 2, '.', ',');
+            echo "<h2>Total Owed Taxes: {$total_tax} <br></h2>";
+            
+            $tax_percent = round(100 * (array_sum($taxable_amounts) /
+                    $initial_taxable_income), 2)."%";
+            echo "<h2>Taxes Owed as percentage of adjusted gross income: $tax_percent</h2>";
         }
         
        
