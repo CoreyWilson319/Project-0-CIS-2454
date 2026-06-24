@@ -21,55 +21,59 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
         $form_gross_income = "";
         $form_deductions = "";
 
-        
-        
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
-            $form_name = $_POST['name'];
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $form_name = htmlspecialchars($_POST['name'], ENT_QUOTES, 'UTF-8');
             $form_gross_income = $_POST['income'];
             $form_deductions = $_POST['deductions'];
             $adjusted_gross_income = $form_gross_income - $form_deductions;
-            
-        if (validateForm($form_name, $form_gross_income, $form_deductions) === true) {
-                calculateTaxes($adjusted_gross_income);
+
+            if (validateForm($form_name, $form_gross_income, $form_deductions) === true) {
+                echo "<h1>Welcome {$form_name},</h1>";
+                calculateTaxes($adjusted_gross_income, $form_gross_income);
             } else {
                 echo ("<h1>Error Invalid Form Entry</h1>");
             }
-        
         }
-        
+
         function validateForm($name, $gross_income, $deductions) {
             $validated = true;
             if (strlen($name) < 1) {
                 echo "<h1>'Invalid Name Entered.'</h1>";
                 $validated = false;
-            } else if (is_numeric($gross_income) === false || 
+            } else if (is_numeric($gross_income) === false ||
                     is_numeric($deductions) === false) {
                 echo "<h1>Invalid Gross Income or Total Deduction.</h1>";
                 $validated = false;
-            } 
+            } else if ($gross_income < 0 || $deductions < 0) {
+                echo "<h1>Income or Deductions cannot be less than 0.</h1>";
+                $validated = false;
+            } else if ($deductions > $gross_income) {
+                echo "<h1>Deductions cannot be more than Gross Income.</h1>";
+                $validated = false;
+            }
             return $validated;
         }
-        
-        function calculateTaxes($taxable_income) {
+
+        function calculateTaxes($taxable_income, $gross_income) {
             $initial_taxable_income = $taxable_income;
-            $output_agi = "$".number_format($taxable_income, 2, '.', ',');
+            $output_agi = "$" . number_format($taxable_income, 2, '.', ',');
             $tax_brackets = [
-                [0, 12400, .10], 
-                [12400, 50400, .12], 
-                [50400, 105700, .22], 
-                [105700, 201775, .24], 
-                [201775, 256225, .32], 
-                [256225, 640600, .35], 
+                [0, 12400, .10],
+                [12400, 50400, .12],
+                [50400, 105700, .22],
+                [105700, 201775, .24],
+                [201775, 256225, .32],
+                [256225, 640600, .35],
                 [640600, 999999999, .37]];
             $user_bracket_index = null;
             $taxable_amounts = [];
             foreach ($tax_brackets as $index => $bracket) {
                 [$min, $max, $rate] = $bracket;
-                $percentage = number_format($rate * 100). '%';
+                $percentage = number_format($rate * 100) . '%';
                 $taxable_amount = ($max - $min) * $bracket[2];
 
                 if ($taxable_income > $max) {
-                    $output = "$".number_format(($taxable_amount), 2, '.', ',');
+                    $output = "$" . number_format(($taxable_amount), 2, '.', ',');
                     echo "<h2>Taxes Owed at {$percentage} bracket: {$output}<br></h2>";
                     $income_in_bracket = $max - $min;
                     $taxable_amount = $income_in_bracket * $rate;
@@ -77,30 +81,33 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Project/PHP/PHPProject.php to edi
                 } else {
                     $user_bracket_index = $index;
                     $final_output = ($taxable_income - $min) * $rate;
-                    $final_output = "$".number_format(($final_output), 2, '.', ',');
-                    echo "<h2>Taxes Owed at {$percentage} bracket: {$final_output}<br></h2>";
                     $taxable_amounts[] = $final_output;
+                    $final_output = "$" . number_format(($final_output), 2, '.', ',');
+                    echo "<h2>Taxes Owed at {$percentage} bracket: {$final_output}<br></h2>";
+
                     break;
-                }               
+                }
             }
-            
+
             for ($i = $user_bracket_index + 1; $i < count($tax_brackets); $i++) {
                 $min = $tax_brackets[$i][0];
                 $max = $tax_brackets[$i][1];
-                $percentage = number_format($tax_brackets[$i][2] * 100). '%';
+                $percentage = number_format($tax_brackets[$i][2] * 100) . '%';
                 echo "<h2>Taxes Owed at {$percentage} bracket: $0.00<br></h2>";
             }
-            
+
             echo "<h2>Adjusted Gross Income: {$output_agi} <br></h2>";
-            $total_tax = "$".number_format(array_sum($taxable_amounts), 2, '.', ',');
+            $total_tax = "$" . number_format(array_sum($taxable_amounts), 2, '.', ',');
             echo "<h2>Total Owed Taxes: {$total_tax} <br></h2>";
-            
+
             $tax_percent = round(100 * (array_sum($taxable_amounts) /
-                    $initial_taxable_income), 2)."%";
+                            $initial_taxable_income), 2) . "%";
+
+            $gross_tax_percent = round(100 * (array_sum($taxable_amounts) /
+                            $gross_income), 2) . "%";
             echo "<h2>Taxes Owed as percentage of adjusted gross income: $tax_percent</h2>";
+            echo "<h2>Taxes Owed as percentage of gross income: {$gross_tax_percent}</h2>";
         }
-        
-       
         ?>
     </body>
 </html>
