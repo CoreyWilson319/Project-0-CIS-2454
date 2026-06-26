@@ -1,0 +1,19 @@
+{
+    "items": [
+        "apple",
+        "banana",
+        "orange",
+        "kiwi",
+        "strawbery",
+        "green beans",
+        "cabbage",
+        "broccoli",
+        "carrots",
+        "chicken",
+        "turkey",
+        "beef",
+        "lamb",
+        "fish"
+    ],
+    "numberOfStaff": 7
+}
