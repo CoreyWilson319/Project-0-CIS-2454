@@ -10,44 +10,23 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
     </head>
     <body>
         <?php
-        $url = "http://localhost:8080";
-        
-        function getStaff($url){
-            $staff_response = json_decode(file_get_contents($url."/staffing"), true);
-            return $staff_response; 
-        }
-        
-        function getItems($url){
-            
-            $items_response = json_decode(file_get_contents($url."/items"), true);
-            
-            $item_components = array_map(function($item){
-                return("<div> $item </div><br>");
-            }, $items_response);
-            
-            return $item_components; 
-        }
-        
-        function addItem($url, $item) {
-            $post_url = $url."/items/".$item;
-            $ch = curl_init($post_url);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_exec($ch);
-        }
-        
-        addItem($url, "hotdogs");
-        
+        require_once 'FrontEndCalls.php';
         
 //      When I want to get items do this
         echo "<div id=item-container>";
-        foreach (getItems($url) as $item) {
+        foreach (getItems() as $item) {
             echo $item;
         }
         echo "</div>";
 //      END
+        
+        setStaff(20);
 
-        echo getStaff($url);
+        echo getStaff();
+        deleteItem("sick");
 
+        echo '<form><label>Item:</label><input id="item"> </form> <button type="submit">Delete</button>';
+        echo '<form><label>Staff:</label><input id="item"> </form> <button type="submit">Submit</button>';
         ?>
     </body>
 </html>
