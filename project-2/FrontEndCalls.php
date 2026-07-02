@@ -13,14 +13,12 @@
 class FrontEndCalls {
     //put your code here
     private $url = "http://localhost:8080";
+    private $last_status;
     
-    function __construct() {
-        
-    }
     
         private function getStaff(){
             $staff_response = json_decode(file_get_contents($this->url."/staffing"), true);
-            return $staff_response; 
+            return "<div id='number_of_staff'>$staff_response</div>"; 
         }
         
         public function setStaff($number_of_staff) {
@@ -31,12 +29,19 @@ class FrontEndCalls {
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             
             curl_exec($ch);
+            $status = $this->checkHTTPSTatus($ch);
+            if ($status !== 200) {
+                echo "<h2>Error: Invalid Number</h2>";
+            }
+            curl_close($ch);           
+
             
         }
         
         private function getItems(){
             
-            $items_response = json_decode(file_get_contents($this->url."/items"), true);
+            $items_response = json_decode(file_get_contents($this->url."/items")
+                    , true);
             
             $item_components = array_map(function($item){
                 return("<div class='item'> $item </div>");
@@ -49,34 +54,48 @@ class FrontEndCalls {
             $post_url = $this->url."/items/".$item;
             $ch = curl_init($post_url);
             curl_setopt($ch, CURLOPT_POST, true);
-//            Set option to not retrieve the response body from the backend
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_exec($ch);
+            $status = $this->checkHTTPSTatus($ch);
+            if ($status !== 200) {
+                echo "<h2>Error: Item already exists</h2>";
+            }
+            curl_close($ch);
         }
         
         public function deleteItem($item) {
-//            item obtained from form
             $delete_url = $this->url."/items/".$item;
             $ch = curl_init($delete_url);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             
             curl_exec($ch);
-//            On click do this function?
+            $status = $this->checkHTTPSTatus($ch);
+            if ($status !== 200) {
+                echo "<h2>Error: Does not Exists</h2>";
+            }
+            curl_close($ch);
             
         }
         
         public function displayItems() {
-            //      When I want to get items do this
             echo "<div id=item-container>";
             foreach ($this->getItems() as $item) {
                 echo $item;
             }
             echo "</div>";
-            //      END
         }
         
         public function displayStaff() {
             echo $this->getStaff();
         }
+        
+        private function checkHTTPSTatus($ch) {
+            $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $this-> last_status = $status_code;
+
+            return $status_code;
+        }
+
+        
 }
