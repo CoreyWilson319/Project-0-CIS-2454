@@ -13,6 +13,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
         <h1>Fresh Market</h1>
         <div id="form-container">
             <form method="POST">
+                <!--method is post because no PUT and DELETE in PHP-->
                 <label>Delete Item:</label>
                 <input type="hidden" name="_method" value="DELETE"/>
                 <input id="item" name="item">  
@@ -35,17 +36,23 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
         </div>
         
         <?php
+//        import FrontEndCalls and instantiate as api_call
         require_once 'FrontEndCalls.php';
         $api_call = new FrontEndCalls();
+
+        //        Store the first variable that is not null as method
 
         $method = $_POST['_method'] ?? 
                 $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ?? 
                 $_SERVER['REQUEST_METHOD'];
                 
         if ($method === "PUT") {
-            
+//          If method is put update the number of staff
+//          Retrieve number from POST SuperGlobal
             $number = $_POST['number'] ?? null;
+//          perform setStaff method passing number obtained from form as parameter
             $api_call ->setStaff($number);
+//          Rerender Staff on Duty and Items before closing with exit;
             echo "<h1>Staff on Duty</h1>";
             $api_call ->displayStaff();
             echo "<h1>Available Items</h1>";
@@ -55,9 +62,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
         }
 
         if ($method === "DELETE") {
-            
+//          If method is delete delete the passed item from the api
+//          Retrieve number from POST SuperGlobal            
             $item = $_POST['item'] ?? null;
+//          perform deleteItem with parameter obtained from SuperGlobal
             $api_call ->deleteItem($item);
+//          Rerender Staff on Duty and Items before closing with exit;            
             echo "<h1>Staff on Duty</h1>";
             $api_call ->displayStaff();
             echo "<h1>Available Items</h1>";
@@ -66,10 +76,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
         }
         
         if ($method === "POST"){
-            
-            $item = $_POST['item'] ?? null;            
+//          If method is delete delete the passed item from the api
+            $item = $_POST['item'] ?? null;  
+//          Retrieve item from POST SuperGlobal              
+//          Perform addItem method with the item variable as a parameter    
             $api_call ->addItem($item);
             echo "<h1>Staff on Duty</h1>";
+//          Rerender Staff on Duty and Items before closing with exit;                        
             $api_call ->displayStaff();
             echo "<h1>Available Items</h1>";
             $api_call ->displayItems();
@@ -77,7 +90,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
         }
         
         if ($method === "GET"){
-            
+//          Render Staff on Duty and Items before closing with exit;                        
             echo "<h1>Staff on Duty</h1>";
             $api_call ->displayStaff();
             echo "<h1>Available Items</h1>";
