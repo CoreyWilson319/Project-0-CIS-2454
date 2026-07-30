@@ -3,6 +3,7 @@ import { Sequelize } from 'sequelize';
 
 dotenv.config();
 
+// Sequelize constructor to establish connection
 const sequelize = new Sequelize(
     process.env.database,
     process.env.user,

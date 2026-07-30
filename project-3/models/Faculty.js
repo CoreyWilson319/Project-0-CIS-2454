@@ -1,5 +1,8 @@
+// Imports
 import {Sequelize, DataTypes} from "sequelize";
 import { sequelize } from "../sequelize.js";
+
+// Create Faculty Model with Constraints
 
 const Faculty = sequelize.define("faculty", {
     id: {

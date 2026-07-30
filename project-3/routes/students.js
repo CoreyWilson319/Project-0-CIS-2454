@@ -1,9 +1,11 @@
+// Imports
 import express from "express";
 import Student from "../models/Student.js";
 import sequelize from "sequelize";
 
 const router = express.Router();
-
+// Follows same logic as courses route only major changes are
+// The Model name and parameters and variables being used
 
 router.get("/", async (req, res) => {
     res.status(200).send("Hello at /student");

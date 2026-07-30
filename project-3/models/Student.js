@@ -1,6 +1,8 @@
+// Imports
 import {Sequelize, DataTypes} from "sequelize";
 import { sequelize } from "../sequelize.js";
 
+// Create Student Model with Constraints
 const Student = sequelize.define("students", {
     id: {
         type: DataTypes.INTEGER,

@@ -1,8 +1,12 @@
+// Imports
 import express from "express";
 import Enrollment from "../models/Enrollment.js";
 import sequelize from "sequelize";
 
 const router = express.Router();
+
+// Follows same logic as courses route only major changes are
+// The Model name and parameters and variables being used
 
 
 router.get("/", async (req, res) => {
@@ -38,7 +42,11 @@ router.post("/add", async (req, res) => {
     const student_id = req.body.student_id;
     const section_id = req.body.section_id;
     let grade = null;
+    // since we allow grade to be null in our SQL database
+    // default grade to null
     if (req.body.grade) {
+        // check request body for a grade value
+        // if grade value is found update variable in route to match the request body value
         grade = req.body.grade
     }
     
@@ -71,7 +79,11 @@ router.put("/:id", async (req, res) => {
             let grade = null
             const student_id = req.body.student_id;
             const section_id = req.body.section_id;
-            if (req.body.grade) {
+        // since we allow grade to be null in our SQL database
+        // default grade to null
+        if (req.body.grade) {
+        // check request body for a grade value
+        // if grade value is found update variable in route to match the request body value
                 grade = req.body.grade
             }
             existingEnrollment.student_id = student_id;

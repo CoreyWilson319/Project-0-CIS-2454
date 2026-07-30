@@ -1,5 +1,8 @@
+// Imports
 import {Sequelize, DataTypes} from "sequelize";
 import { sequelize } from "../sequelize.js";
+
+// Create Section Model with Constraints
 
 const Section = sequelize.define("section", {
     id: {
