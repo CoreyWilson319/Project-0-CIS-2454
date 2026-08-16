@@ -62,26 +62,27 @@ function get_store($id) {
     
 }
 
-function insert_store($store) {
-global $database;
-
-$query = "INSERT INTO items (name) VALUES (:name)";
-
-$statement = $database->prepare($query);
-$statement->bindValue(":name", $store->get_name());
-
-$statement->execute();
-
-$statement->closeCursor();
-}
-
-
-function update_store($store) {
+function get_by_name($store) {
     global $database;
 
-    $query = "UPDATE stores
-            SET name = :name,
-            WHERE id = :id";
+    $query = "SELECT id, name FROM stores WHERE name = :name";
+
+    $statement = $database->prepare($query);
+    $statement->bindValue(":name", $store->get_name());
+
+    $statement->execute();
+
+    $store = $statement->fetchObject();
+
+    $statement->closeCursor();
+
+
+    return $store;
+}
+function insert_store($store) {
+    global $database;
+
+    $query = "INSERT INTO stores (name) VALUES (:name)";
 
     $statement = $database->prepare($query);
     $statement->bindValue(":name", $store->get_name());
@@ -89,14 +90,38 @@ function update_store($store) {
     $statement->execute();
 
     $statement->closeCursor();
+
+    return get_by_name($store);
+
+
 }
 
-function delete_store() {
+
+function update_store($store) {
     global $database;
 
-    $query = "DELETE FROM stores WHERE id = :id";
+    $query = "UPDATE stores
+            SET name = :name
+            WHERE id = :id";
 
     $statement = $database->prepare($query);
+    $statement->bindValue(":name", $store->get_name());
+    $statement->bindValue(":id", $store->id);
+    
+    $statement->execute();
+    
+    $statement->closeCursor();
+    
+    return get_store($store->id);
+    }
+
+function delete_store($store) {
+    global $database;
+    
+    $query = "DELETE FROM stores WHERE id = :id";
+    
+    $statement = $database->prepare($query);
+    $statement->bindValue(":id", $store->id);
 
     $statement->execute();
 

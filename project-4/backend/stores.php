@@ -2,38 +2,58 @@
 
 include 'database.php';
 include 'models/Stores.php';
+
+$data = json_decode(file_get_contents("php://input"), true);
+
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$parts = explode('/', trim($path, '/'));
+
+$id = end($parts);
+$action = $data["action"] ?? null;
+$id = filter_var($id, FILTER_VALIDATE_INT);
+$name = $data["name"] ?? null;
+
 header('Content-Type: application/json');
 
-$stores = list_stores();
 
+    $name !== null &&
+    $insert_or_update = $data["insert_or_update"] ?? null;
 
-$action = htmlspecialchars((filter_input(INPUT_POST, "action")));
-$id = (filter_input(INPUT_POST, "id", FILTER_VALIDATE_FLOAT));
-$name = htmlspecialchars((filter_input(INPUT_POST, "name")));
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-
-if ($action == "insert_or_update" && $name != "") {
-    $insert_or_update = filter_input(INPUT_POST, "insert_or_update");
-
-    $store = new Store($id, $name);
-
-
-if ($insert_or_update == "insert") {
-        insert_store($store);
-    } else if ($insert_or_update == "update") {
-        update_store($store);
+        if ($id !== false && $id !== null) {
+            echo json_encode(get_store($id));
+            } else {
+                echo json_encode(list_stores());
+        } 
     }
-} else if ($action == "delete" && $id == "") {
-    $item = new Store($id, "");
 
-    delete_item();
-} else  if ($action != "") {
-    // Show Error
-    echo "Error";
-} else if ($action == "get" && $id != "") {
-    get_store($id);
-}
+    else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-echo json_encode($stores);
+    if ($id !== false && $id !== null) {
+            $store = new Store(null, $name);
+            insert_store($store);
+            echo json_encode(get_by_name($store));
+    } else {
+        $store = new Store(null, $name);
 
+        $new_store = insert_store($store);
+
+        echo json_encode($new_store);
+    }
+            } 
+    else if ($_SERVER['REQUEST_METHOD'] === "PUT") {
+            $store = new Store($id, $name);
+            update_store($store);
+            echo json_encode(get_store($store->id));
+
+
+    } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+
+        $store = new Store($id, null);
+        $deleted_store = get_store($id);
+        delete_store($store);
+        echo "Deleted: ".json_encode($deleted_store);
+
+    }
 ?>

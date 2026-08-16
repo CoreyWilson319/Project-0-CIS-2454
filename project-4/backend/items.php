@@ -2,40 +2,57 @@
 
 include 'database.php';
 include 'models/Items.php';
+
+$data = json_decode(file_get_contents("php://input"), true);
+
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$parts = explode('/', trim($path, '/'));
+
+$id = end($parts);
+
+$action = $data["action"] ?? null;
+// $id = $data["id"] ?? null;
+$id = filter_var($id, FILTER_VALIDATE_INT);
+$store_id = $data["store_id"] ?? null;
+$name = $data["name"] ?? null;
+$quantity = $data["quantity"] ?? null;
+$checked = $data["checked"] ?? null;
+
 header('Content-Type: application/json');
 
-$items = list_items();
+// $action = htmlspecialchars((filter_input(INPUT_POST, "action")));
+// $id = (filter_input(INPUT_POST, "id", FILTER_VALIDATE_INT));
+// $store_id = (filter_input(INPUT_POST, "store_id", FILTER_VALIDATE_INT));
+// $name = htmlspecialchars((filter_input(INPUT_POST, "name")));
+// $quantity = (filter_input(INPUT_POST, "quantity", FILTER_VALIDATE_INT));
+// $checked = (filter_input(INPUT_POST, "checked", FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE));
 
+    $store_id !== null &&
+    $name !== null &&
+    $quantity !== null &&
+    is_bool($checked) == true;
+    $insert_or_update = $data["insert_or_update"] ?? null;
 
-$action = htmlspecialchars((filter_input(INPUT_POST, "action")));
-$id = (filter_input(INPUT_POST, "id", FILTER_VALIDATE_FLOAT));
-$store_id = (filter_input(INPUT_POST, "store_id", FILTER_VALIDATE_FLOAT));
-$name = htmlspecialchars((filter_input(INPUT_POST, "name")));
-$quantity = (filter_input(INPUT_POST, "quantity", FILTER_VALIDATE_FLOAT));
-$checked = (filter_input(INPUT_POST, "checked", FILTER_VALIDATE_BOOLEAN));
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-if ($action == "insert_or_update" && $store_id != "" && $name != "" && $quantity != ""&& $checked != "") {
-    $insert_or_update = filter_input(INPUT_POST, "insert_or_update");
-
-    $item = new Item($id, $store_id, $name, $quantity, $checked);
-
-
-if ($insert_or_update == "insert") {
-        insert_item($item);
-    } else if ($insert_or_update == "update") {
-        update_item($item);
+        if ($id !== false && $id !== null) {
+            echo json_encode(get_item($id));
+            } else {
+                echo json_encode(list_items());
+        } 
     }
-} else if ($action == "delete" && $id == "") {
-    $item = new Item($id, 0, "", 0, true);
 
-    delete_item($item);
-} else  if ($action != "") {
-    // Show Error
-    echo "Error";
-} else if ($action == "get" && $id != "") {
-    get_item($id);
-}
+    else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $item = new Item(null, $store_id, $name, $quantity, $checked);
+            insert_item($item);
+    } else if ($_SERVER['REQUEST_METHOD'] === "PUT") {
+            $item = new Item($id, $store_id, $name, $quantity, $checked);
+            update_item($item);
 
-echo json_encode($items);
+    } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
+        $item = new Item($id, 0, "", 0, true);
+        delete_item($item);
+
+    }
 ?>

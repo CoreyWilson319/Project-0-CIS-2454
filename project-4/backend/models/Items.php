@@ -73,10 +73,10 @@ function list_items() {
 
 function get_item($id) {
     global $database;
-
-    $query = "SELECT id, store_id, name, quantity, checked FROM items WHERE id = $id";
+    $query = "SELECT id, store_id, name, quantity, checked FROM items WHERE id = :id";
 
     $statement = $database->prepare($query);
+    $statement->bindValue(":id", $id, PDO::PARAM_INT);
 
     $statement->execute();
 
@@ -89,22 +89,42 @@ function get_item($id) {
     
 }
 
+function get_by_name($item) {
+    global $database;
+
+    $query = "SELECT id, name FROM items WHERE name = :name";
+
+    $statement = $database->prepare($query);
+    $statement->bindValue(":name", $item->get_name());
+
+    $statement->execute();
+
+    $item = $statement->fetchObject();
+
+    $statement->closeCursor();
+
+
+    return $item;
+}
+
 function insert_item($item) {
-global $database;
+    global $database;
 
-$query = "INSERT INTO items
-    (store_id, name, quantity, checked)
-    VALUES (:store_id, :name, :quantity, :checked)";
+    $query = "INSERT INTO items
+        (store_id, name, quantity, checked)
+        VALUES (:store_id, :name, :quantity, :checked)";
 
-$statement = $database->prepare($query);
-$statement->bindValue(":store_id", $item->get_store_id());
-$statement->bindValue(":name", $item->get_name());
-$statement->bindValue(":quantity", $item->get_quantity());
-$statement->bindValue(":checked", $item->get_checked());
+    $statement = $database->prepare($query);
+    $statement->bindValue(":store_id", $item->get_store_id());
+    $statement->bindValue(":name", $item->get_name());
+    $statement->bindValue(":quantity", $item->get_quantity());
+    $statement->bindValue(":checked", $item->get_checked());
 
-$statement->execute();
+    $statement->execute();
 
-$statement->closeCursor();
+    $statement->closeCursor();
+
+    return get_by_name($item);
 }
 
 
@@ -123,18 +143,22 @@ function update_item($item) {
     $statement->bindValue(":name", $item->get_name());
     $statement->bindValue(":quantity", $item->get_quantity());
     $statement->bindValue(":checked", $item->get_checked());
+    $statement->bindValue(":id", $item->id);
 
     $statement->execute();
 
     $statement->closeCursor();
 }
 
-function delete_item() {
+function delete_item($item) {
     global $database;
 
     $query = "DELETE FROM items WHERE id = :id";
 
     $statement = $database->prepare($query);
+
+    $statement->bindValue(":id", $item->id);
+
 
     $statement->execute();
 
