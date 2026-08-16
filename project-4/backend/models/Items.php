@@ -45,6 +45,7 @@ class Item {
     public function get_checked() {
         return $this->checked;
     }
+   
 }
 
 function list_items() {
@@ -121,10 +122,16 @@ function insert_item($item) {
     $statement->bindValue(":checked", $item->get_checked());
 
     $statement->execute();
-
+    $id = $database->lastInsertId();
     $statement->closeCursor();
 
-    return get_by_name($item);
+    return [
+        "id" => $id,
+        "store_id" => $item-> get_store_id(),
+        "name" => $item-> get_name(),
+        "quantity" => $item-> get_quantity(),
+        "get_checked" => $item-> get_checked(),
+    ];
 }
 
 
@@ -148,6 +155,13 @@ function update_item($item) {
     $statement->execute();
 
     $statement->closeCursor();
+    return [
+    "id" => $item->id,
+    "store_id" => $item-> get_store_id(),
+    "name" => $item-> get_name(),
+    "quantity" => $item-> get_quantity(),
+    "get_checked" => $item-> get_checked(),
+    ];
 }
 
 function delete_item($item) {

@@ -44,15 +44,19 @@ header('Content-Type: application/json');
 
     else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $item = new Item(null, $store_id, $name, $quantity, $checked);
-            insert_item($item);
+            echo(json_encode(insert_item($item)));
+
     } else if ($_SERVER['REQUEST_METHOD'] === "PUT") {
+//        add logic to ensure id exists
             $item = new Item($id, $store_id, $name, $quantity, $checked);
-            update_item($item);
+            echo(json_encode(update_item($item)));
 
     } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 
         $item = new Item($id, 0, "", 0, true);
+        $removed_item = get_item($id);
         delete_item($item);
+        echo(json_encode($removed_item));
 
     }
 ?>

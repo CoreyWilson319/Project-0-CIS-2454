@@ -30,7 +30,7 @@ header('Content-Type: application/json');
 
     else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    if ($id !== false && $id !== null) {
+    if ($name === null || $name === '') {
             $store = new Store(null, $name);
             insert_store($store);
             echo json_encode(get_by_name($store));

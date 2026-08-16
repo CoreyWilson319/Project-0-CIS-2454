@@ -88,10 +88,15 @@ function insert_store($store) {
     $statement->bindValue(":name", $store->get_name());
 
     $statement->execute();
+    $id = $database->lastInsertId();
 
     $statement->closeCursor();
 
-    return get_by_name($store);
+//    return get_by_name($store);
+    return [
+        "id" => $id,
+        "name" => $store-> get_name()
+    ];
 
 
 }
