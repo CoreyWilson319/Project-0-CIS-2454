@@ -1,7 +1,8 @@
 function Home() {
   return (
-    <div className="App">
-        "Hello World"
+    <div className="home">
+      <div id="image"></div>
+      <a id="shop-link" href="/browse">Click to Shop!</a>
     </div>
   );
 }
