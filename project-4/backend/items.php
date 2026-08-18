@@ -8,7 +8,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $parts = explode('/', trim($path, '/'));
 
-$id = end($parts);
+$id = $data["id"] ?? null;
 
 $action = $data["action"] ?? null;
 // $id = $data["id"] ?? null;
