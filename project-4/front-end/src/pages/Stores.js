@@ -1,9 +1,13 @@
 import StoreCard from "../components/StoreCard";
 import {useState, useEffect} from 'react';
 const apiUrl = process.env.REACT_APP_API_URL;
-function Browse(props) {
+function Stores(props) {
 
   const [stores, setStores] = useState([]);
+
+  function handleDelete(id) {
+    setStores(stores.filter(store => store.id !== id));
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -20,7 +24,7 @@ function Browse(props) {
   
       fetchData() 
 }, [])
-  const mapped_stores = stores.map((store) => <StoreCard key={store.id} store={store}/>)
+  const mapped_stores = stores.map((store) => <StoreCard key={store.id} store={store} onDelete={handleDelete}/>)
   return (
     <div className="browse">
       {/* show stores belonging to a particular store */}
@@ -31,4 +35,4 @@ function Browse(props) {
   );
 }
 
-export default Browse;
+export default Stores;

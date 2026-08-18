@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
-function ItemCard({item}) {
+function ItemCard({item, onDelete}) {
 
-  function handleClick(){
+  async function handleClick(){
   async function apiCall() {
 
     const apiUrl = process.env.REACT_APP_API_URL;
@@ -15,13 +15,15 @@ function ItemCard({item}) {
         },
         body: JSON.stringify({"id": item.id})
       })
+      onDelete(item.id)
     } 
-    catch {
-      console.log("Error");
+
+    catch (error) {
+      console.log(error);
     }
   }
 
-  apiCall();
+  await apiCall();
 
   
   }

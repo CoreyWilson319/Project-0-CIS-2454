@@ -72,6 +72,32 @@ function list_items() {
     
 }
 
+function get_items_by_store($id) {
+    global $database;
+
+    $query = "SELECT id, store_id, name, quantity, checked
+            FROM items
+            WHERE store_id = $id";
+
+    $statement = $database->prepare($query);
+
+    $statement->execute();
+
+    $items = $statement->fetchAll();
+
+    $statement->closeCursor();
+
+    $items_array = array();
+
+    foreach ($items as $item) {
+        $items_array[] = new Item($item["id"], $item['store_id'], $item['name'], $item['quantity'],
+        $item['checked']);
+        }
+
+    return $items_array;
+    
+}
+
 function get_item($id) {
     global $database;
     $query = "SELECT id, store_id, name, quantity, checked FROM items WHERE id = :id";
@@ -88,24 +114,6 @@ function get_item($id) {
 
     return $item;
     
-}
-
-function get_by_name($item) {
-    global $database;
-
-    $query = "SELECT id, name FROM items WHERE name = :name";
-
-    $statement = $database->prepare($query);
-    $statement->bindValue(":name", $item->get_name());
-
-    $statement->execute();
-
-    $item = $statement->fetchObject();
-
-    $statement->closeCursor();
-
-
-    return $item;
 }
 
 function insert_item($item) {

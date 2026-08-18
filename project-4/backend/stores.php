@@ -2,6 +2,13 @@
 
 include 'database.php';
 include 'models/Stores.php';
+include 'models/Items.php';
+
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+
+header("Content-Type: application/json");
 
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -21,11 +28,13 @@ header('Content-Type: application/json');
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
+        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
         if ($id !== false && $id !== null) {
-            echo json_encode(get_store($id));
-            } else {
-                echo json_encode(list_stores());
-        } 
+            echo json_encode(get_items_by_store($id));
+        } else {
+            echo json_encode(list_stores());
+        }
     }
 
     else if ($_SERVER['REQUEST_METHOD'] === 'POST') {

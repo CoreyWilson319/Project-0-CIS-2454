@@ -1,19 +1,24 @@
 import ItemCard from "../components/ItemCard";
+import StoreCard from "../components/StoreCard";
 import {useState, useEffect} from 'react';
+import {useParams} from 'react-router-dom';
+// import { useNavigate } from "react-router-dom";
+// const navigate = useNavigate();
+// navigate("/");
 const apiUrl = process.env.REACT_APP_API_URL;
-function Browse(props) {
 
+
+
+
+function ShopStore({ store, handleDelete}) {
+  const { id } = useParams();
   const [items, setItems] = useState([]);
 
-  function handleDelete(id) {
-    setItems(items.filter(item => item.id !== id));
-  }
-  
   useEffect(() => {
     async function fetchData() {
 
       try {
-        const response = await fetch(apiUrl + "backend/items.php")
+        const response = await fetch(apiUrl + "backend/stores.php?id=" + id)
         const results = await response.json();
         await setItems(results)
       } 
@@ -25,6 +30,7 @@ function Browse(props) {
       fetchData() 
 }, [])
   const mapped_items = items.map((item) => <ItemCard key={item.id} item={item} onDelete={handleDelete}/>)
+
   return (
     <div className="browse">
       {/* show items belonging to a particular store */}
@@ -35,4 +41,4 @@ function Browse(props) {
   );
 }
 
-export default Browse;
+export default ShopStore;

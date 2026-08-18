@@ -1,7 +1,8 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 
 function StoreUpdate({store}) {
   
+  const navigate = useNavigate();
   const { id } = useParams()
 
   async function handleSubmit(e) {
@@ -22,7 +23,10 @@ function StoreUpdate({store}) {
           "id": id,
           "name": name})
       })
+
+      navigate("/stores")
     } 
+
     catch {
       console.log("Error");
     }
@@ -34,17 +38,9 @@ function StoreUpdate({store}) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>Store ID:</label>
-      <input name="storeID"></input>
 
       <label>Name:</label>
       <input name="name"></input>
-
-      <label>Quantity:</label>
-      <input name="quantity"></input>
-
-      <label>Checked?:</label>
-      <input type='checkbox' name="checked"></input>
 
       <button type='submit'>Submit</button>
     </form>

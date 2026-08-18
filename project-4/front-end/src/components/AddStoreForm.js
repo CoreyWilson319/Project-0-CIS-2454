@@ -1,11 +1,12 @@
+import { useNavigate } from "react-router-dom";
+
 function AddStoreForm() {
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
+
     const name = e.target.elements.name.value;
-
-  async function apiCall() {
-
     const apiUrl = process.env.REACT_APP_API_URL;
 
     try {
@@ -14,17 +15,20 @@ function AddStoreForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({"name": name})
-      })
-    } 
-    catch {
-      console.log("Error");
+        body: JSON.stringify({
+          name: name
+        })
+      });
+
+      navigate("/stores");
+
+    } catch (error) {
+      console.log("Error:", error);
     }
   }
 
-  apiCall();
-  
-}
+  // navigate("/stores")
+
 
   return (
     <form onSubmit={handleSubmit}>

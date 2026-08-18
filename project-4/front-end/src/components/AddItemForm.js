@@ -1,7 +1,12 @@
 import {useState, useEffect} from 'react';
+import { useNavigate, useParams } from "react-router-dom";
 
 
 function AddItemForm() {
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+
 
 async function handleSubmit(e) {
   e.preventDefault();
@@ -22,6 +27,8 @@ async function handleSubmit(e) {
         },
         body: JSON.stringify({"store_id": storeID, "name": name, "quantity": quantity, "checked": checked})
       })
+
+      navigate("/stores");
     } 
     catch {
       console.log("Error");
@@ -34,8 +41,13 @@ async function handleSubmit(e) {
 
   return (
     <form onSubmit={handleSubmit}>
+      {id !== undefined ? (<input type="hidden" name="storeID" value={id}/>) : (
+        <>
       <label>Store ID:</label>
-      <input name="storeID"></input>
+      <input name="storeID"></input>   </>
+      
+      )}
+
 
       <label>Name:</label>
       <input name="name"></input>
