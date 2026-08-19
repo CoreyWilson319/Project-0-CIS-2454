@@ -40,25 +40,32 @@ async function handleSubmit(e) {
 }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className='item-form'>
       {id !== undefined ? (<input type="hidden" name="storeID" value={id}/>) : (
         <>
-      <label>Store ID:</label>
-      <input name="storeID"></input>   </>
+      <div className='form-content'>
+        <label>Store ID:</label>
+      </div>
+        <input name="storeID"></input>
+           </>
       
       )}
 
+      <div className='form-content'>
+        <label>Name:</label>
+      </div>
+        <input name="name"></input>
 
-      <label>Name:</label>
-      <input name="name"></input>
+      <div className='form-content'>
+        <label>Quantity:</label>
+      </div>
+        <input name="quantity"></input>
 
-      <label>Quantity:</label>
-      <input name="quantity"></input>
-
-      <label>Checked?:</label>
-      <input type='checkbox' name="checked"></input>
-
-      <button type='submit'>Submit</button>
+      <div className='form-content'>
+        <label>Checked?:</label>
+      </div>
+        <input type='checkbox' name="checked"></input>
+        <button type='submit'>Submit</button>
     </form>
   );
 }

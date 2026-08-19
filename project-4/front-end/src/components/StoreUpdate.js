@@ -37,13 +37,20 @@ function StoreUpdate({store}) {
 }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div className="add">
+      <form onSubmit={handleSubmit} className="item-form">
+      <p>Update a Store</p>
 
-      <label>Name:</label>
-      <input name="name"></input>
+        <div className="form-content">
+          <label>Name:</label>
+        </div>
+          <input name="name"></input>
 
-      <button type='submit'>Submit</button>
-    </form>
+        <div className="form-content">
+          <button type='submit'>Submit</button>
+        </div>
+      </form>
+    </div>
   );
 }
 

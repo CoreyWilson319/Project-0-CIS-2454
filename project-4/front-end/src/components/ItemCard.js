@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function ItemCard({item, onDelete}) {
 
+  const { storeID } = useParams();
   async function handleClick(){
   async function apiCall() {
 
@@ -35,7 +36,7 @@ function ItemCard({item, onDelete}) {
         <div className="card-content">Store ID:</div><div>{item.store_id}</div>
         <div className="card-content">Checked:</div><div>{item.checked}</div>
         <div className="card-content"><button onClick={handleClick}>Delete</button></div>
-          <Link to={"/items/update/"+item.id}>
+          <Link to={`/stores/${item.store_id}/items/${item.id}/update`}>
             <button>Update</button>
           </Link>
       </div>

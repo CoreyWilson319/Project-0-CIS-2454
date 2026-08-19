@@ -31,10 +31,15 @@ function AddStoreForm() {
 
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="item-form">
+      <div className="form-content">
       <label>Name:</label>
+      </div>
+    
       <input name="name"></input>
+    <div className="form-content">
       <button type="submit">Submit</button>
+      </div>
     </form>
   );
 }

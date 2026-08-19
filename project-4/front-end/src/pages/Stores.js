@@ -27,9 +27,6 @@ function Stores(props) {
   const mapped_stores = stores.map((store) => <StoreCard key={store.id} store={store} onDelete={handleDelete}/>)
   return (
     <div className="browse">
-      {/* show stores belonging to a particular store */}
-      {/* Create a new page? */}
-      {/* Use a dropdown to select the store */}
       {mapped_stores}
     </div>
   );

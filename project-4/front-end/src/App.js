@@ -25,7 +25,7 @@ function App(props) {
         <Route path="/stores" element={<Stores />} />
         <Route path="/stores/update/:id" element={<StoreUpdate/>} />
         <Route path="/stores/:id" element={<ShopStore/>} />
-        <Route path="/items/update/:id" element={<ItemUpdate/>} />
+        <Route path="/stores/:storeID/items/:id/update" element={<ItemUpdate/>} />
       </Routes>
     </BrowserRouter>
     <Footer />

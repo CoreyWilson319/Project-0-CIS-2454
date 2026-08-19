@@ -15,7 +15,6 @@ function handleChange(e) {
     <div id="add">
       <p>Create an Item or Store</p>
       <form>
-        <p>Add</p>
           <select name="addOption" onChange={handleChange}>
             <option value="item">Item</option>
             <option value="store">Store</option>

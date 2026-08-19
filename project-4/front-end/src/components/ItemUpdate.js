@@ -1,14 +1,13 @@
 import { useParams } from "react-router-dom";
 
-function ItemUpdate({store}) {
+function ItemUpdate({item}) {
 
-  const { id } = useParams()
-
+  const { id } = useParams();
+  const { storeID } = useParams();
   async function handleSubmit(e) {
     e.preventDefault();
     const name = e.target.elements.name.value;
     const quantity = e.target.elements.quantity.value;
-    const storeID = e.target.elements.storeID.value;
     const checked = e.target.elements.checked.checked;
 
   async function apiCall() {
@@ -42,21 +41,24 @@ function ItemUpdate({store}) {
 }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>Store ID:</label>
-      <input name="storeID"></input>
+    <div className="add">
+      <form onSubmit={handleSubmit} className="item-form">
+      <p>Update an Item</p>
+        {/* <label>Store ID:</label>
+        <input name="storeID"></input> */}
 
-      <label>Name:</label>
-      <input name="name"></input>
+        <label>Name:</label>
+        <input name="name"></input>
 
-      <label>Quantity:</label>
-      <input name="quantity"></input>
+        <label>Quantity:</label>
+        <input name="quantity"></input>
 
-      <label>Checked?:</label>
-      <input type='checkbox' name="checked"></input>
+        <label>Checked?:</label>
+        <input type='checkbox' name="checked"></input>
 
-      <button type='submit'>Submit</button>
-    </form>
+        <button type='submit'>Submit</button>
+      </form>
+    </div>
   );
 }
 
